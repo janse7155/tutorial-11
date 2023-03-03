@@ -57,6 +57,10 @@
 //Run the init() function when the page loads
 window.onload = init;
 
+var puzzleCells;
+var cellBackground;
+
+
 function init() {
    //Insert the title for the first puzzle
    document.getElementById("puzzleTitle").innerHTML = "Puzzle 1";
@@ -69,6 +73,10 @@ var puzzleButtons = document.getElementsByClassName("puzzles");
 for (var i = 0; i< puzzleButtons.length; i++) {
    puzzleButtons[i].onclick = swapPuzzle;
 }
+setupPuzzle();
+
+//Add an event listener for the mouseup event
+document.addEventListener("mouseup", endBackground);
 }
 function swapPuzzle(e) {
    var puzzleID = e.target.id;
@@ -87,8 +95,53 @@ function swapPuzzle(e) {
          document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle3Hint, puzzle3Rating, puzzle3);
          break;
    }
+   setupPuzzle();
 }
-         
+     function setupPuzzle() {
+      /*Match all of the data cells in the puzzle*/
+      puzzleCells = document.querySelectorAll("table#hanjieGrid td");
+
+      /*Set the intial color of each cell to gold*/
+      for (var i = 0; i < puzzleCells.length; i++) { puzzleCells[i].style.backgroundColor = "rgb(233, 207, 29";
+      puzzleCells[i].onmousedown = setBackground;
+      //Use a pencil image as the cursor
+      puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
+      }
+    }    
+
+function setBackground(e) {
+   var cursorType;
+// Set the background based on the keyboard key   
+if (e.shiftKey) {
+   cellBackground = "rgb(233, 207, 29";
+   cursorType = "url(jpf_eraser.png), cell";
+} else if (e.altKey) {
+   cellBackground = "rgb(255, 255, 255)";
+   cursorType = "url(jpf_cross.png), crosshair";
+} else {
+   cellBackground = "rgb(101, 101, 101)";
+   cursorType = "url(jpf_pencil.png), pointer";
+}   
+   e.target.style.backgroundColor = cellBackground;
+   //Create an event listener for every puzzle cell
+   for (var i = 0; i < puzzleCells.length; i++) {
+      puzzleCells[i].addEventListener("mouseenter", extendBackground);
+      puzzleCells[i].style.cursor = cursorType;
+   }
+   //Prevent the default action of selecting table text
+   e.preventDefault();
+}
+function extendBackground(e) {
+   e.target.style.backgroundColor = cellBackground;
+}
+
+function endBackground() {
+   //Remove the event listener for every puzzle cell
+   for (var i = 0; i < puzzleCells.length; i++) {
+      puzzleCells[i].removeEventListener("mouseenter", extendBackground);
+      puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
+   }
+}
 /* ================================================================= */
 
 function drawPuzzle(hint, rating, puzzle) {
