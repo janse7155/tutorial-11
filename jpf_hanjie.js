@@ -75,7 +75,6 @@ setupPuzzle();
 
 // Add an event listener for the mouseup event
 document.addEventListener("mouseup", endBackground);
-​
    // Add an event listener to the Show Solution button
    document.getElementById("solve").addEventListener("click",
       function() {
@@ -105,7 +104,9 @@ document.addEventListener("mouseup", endBackground);
              }
           }
        );
+       
 }
+
 function swapPuzzle(e) {
    var puzzleID = e.target.id;
 
