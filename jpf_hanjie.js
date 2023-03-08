@@ -102,14 +102,13 @@ document.addEventListener("mouseup", endBackground);
                    empty[i].style.backgroundColor = "rgb(255, 101, 101)";
                 }
              }
-          }
-       );
+          }, 500);
        
 }
 
 function swapPuzzle(e) {
+   if (confirm("You will lose all of your work on the puzzle! Continue?")) {
    var puzzleID = e.target.id;
-
    var puzzleTitle = e.target.value;
    document.getElementById("puzzleTitle").innerHTML = puzzleTitle;
 
@@ -129,6 +128,7 @@ function swapPuzzle(e) {
    }
    setupPuzzle();
 }
+}
      function setupPuzzle() {
       /* Match all of the data cells in the puzzle */
       puzzleCells = document.querySelectorAll("table#hanjieGrid td");
@@ -141,6 +141,23 @@ function swapPuzzle(e) {
       // Use a pencil image as the cursor
       puzzleCells[i].style.cursor = "url(jpf_pencil.png), pointer";
       }
+      // Check the puzzle solution
+   document.getElementById("hanjieGrid").addEventListener("mouseup", 
+   function() {
+      var solved = true;
+      for (var i = 0; i< puzzleCells.length; i++) {
+         if ((puzzleCells[i].className === "filled" && 
+              puzzleCells[i].style.backgroundColor !== "rgb(101, 101, 101)")
+            ||
+            (puzzleCells[i].className === "empty" && 
+             puzzleCells[i].style.backgroundColor === "rgb(101, 101, 101)")) {
+                  
+               solved = false;
+               break;
+         }
+      } 
+      if (solved) alert("You Solved the Puzzle");         
+   });
 }
        
         
